@@ -4,11 +4,16 @@ import iconDown from "../assets/icon-chevron-down.svg";
 import iconUp from "../assets/icon-chevron-up.svg";
 import ellipsis from "../assets/icon-vertical-ellipsis.svg";
 import HeaderDropdown from "./HeaderDropdown";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AddEditBoardModal from "../modals/AddEditBoardModal";
+import AddEditTasksModal from "../modals/AddEditTasksModal";
 
-function Header(boardModalOpen, setBoardModalOpen) {
+function Header({ boardModalOpen, setBoardModalOpen }) {
 	const [openDropdown, setOpenDropdown] = useState(false);
+	const [boardType, setBoardType] = useState("add");
+	const [openAddEditTask, setOpenAddEditTask] = useState(false);
+
+	const dispatch = useDispatch();
 
 	const boards = useSelector((state) => state.boards);
 	const board = boards.find((board) => board.isActive);
@@ -23,11 +28,11 @@ function Header(boardModalOpen, setBoardModalOpen) {
 						Kanban
 					</h3>
 					<div className="flex items-center">
-						<h3 className=" truncate max-w-[200px] md:text-2xl text-xl font-bold md:ml-20 font-sans">
-							board.name
+						<h3 className=" truncate max-w-[200px] md:text-2xl text-xl font-bold md:ml-20 font-sans  ">
+							{board.name}
 						</h3>
 						<img
-							src={openDropdown ? iconUp : iconDown}
+							src={openDropdown ? iconDown : iconUp}
 							alt="dropdown icon"
 							className="w-3 ml-2 md:hidden"
 							onClick={() => setOpenDropdown((state) => !state)}
@@ -38,7 +43,14 @@ function Header(boardModalOpen, setBoardModalOpen) {
 				<div className="flex space-x-4 items-center md:space-x-6">
 					<button className="hidden button md:block">+ Add New Tasks</button>
 
-					<button className="button py-1 px-3 md:hidden ">+</button>
+					<button
+						className="button py-1 px-3 md:hidden"
+						onClick={() => {
+							setOpenAddEditTask((state) => !state);
+						}}
+					>
+						+
+					</button>
 
 					<img src={ellipsis} alt="ellipsis" className="cursor-pointer h-6" />
 				</div>
@@ -51,7 +63,11 @@ function Header(boardModalOpen, setBoardModalOpen) {
 				)}
 			</header>
 
-			{!boardModalOpen && <AddEditBoardModal setBoardModalOpen={setBoardModalOpen} />}
+			{boardModalOpen && (
+				<AddEditBoardModal setBoardModalOpen={setBoardModalOpen} type={boardType} />
+			)}
+
+			{openAddEditTask && <AddEditTasksModal />}
 		</div>
 	);
 }
