@@ -5,8 +5,8 @@ import iconUp from "../assets/icon-chevron-up.svg";
 import ellipsis from "../assets/icon-vertical-ellipsis.svg";
 import HeaderDropdown from "./HeaderDropdown";
 import { useDispatch, useSelector } from "react-redux";
-import AddEditBoardModal from "../modals/AddEditBoardModal";
-import AddEditTasksModal from "../modals/AddEditTasksModal";
+import AddEditBoardModal from "./AddEditBoardModal";
+import AddEditTasksModal from "./AddEditTasksModal";
 
 function Header({ boardModalOpen, setBoardModalOpen }) {
 	const [openDropdown, setOpenDropdown] = useState(false);
