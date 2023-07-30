@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { v4 as uuid } from "uuid";
 import crossIcon from "../assets/icon-cross.svg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import boardsSlice from "../redux/boardsSlice";
 
 function AddEditBoardModal({ setBoardModalOpen, type }) {
 	const [name, setName] = useState("");
 
-	const [newColumn, setNewColumn] = useState([
+	const [newColumns, setNewColumns] = useState([
 		{ name: "Todo", task: [], id: uuid() },
 		{ name: "Doing", task: [], id: uuid() },
 		{ name: "Done", task: [], id: uuid() },
@@ -18,7 +18,7 @@ function AddEditBoardModal({ setBoardModalOpen, type }) {
 	const dispatch = useDispatch();
 
 	const onChange = (id, newValue) => {
-		setNewColumn((prevState) => {
+		setNewColumns((prevState) => {
 			const newState = [...prevState];
 			const column = newState.find((col) => col.id === id);
 			column.name = newValue;
@@ -27,7 +27,7 @@ function AddEditBoardModal({ setBoardModalOpen, type }) {
 	};
 
 	const onDelete = (id) => {
-		setNewColumn((prevState) => prevState.filter((el) => el.id !== id));
+		setNewColumns((prevState) => prevState.filter((el) => el.id !== id));
 	};
 
 	const validate = () => {
@@ -36,8 +36,8 @@ function AddEditBoardModal({ setBoardModalOpen, type }) {
 			return false;
 		}
 
-		for (let i = 0; i < newColumn.length; i++) {
-			if (!newColumn[i].name.trim()) {
+		for (let i = 0; i < newColumns.length; i++) {
+			if (!newColumns[i].name.trim()) {
 				return false;
 			}
 		}
@@ -49,11 +49,26 @@ function AddEditBoardModal({ setBoardModalOpen, type }) {
 	const onSubmit = (type) => {
 		setBoardModalOpen(false);
 		if (type === "add") {
-			dispatch(boardsSlice.actions.addBoard({ name, newColumn }));
+			dispatch(boardsSlice.actions.addBoard({ name, newColumns }));
 		} else {
-			dispatch(boardsSlice.actions.editBoard({ name, newColumn }));
+			dispatch(boardsSlice.actions.editBoard({ name, newColumns }));
 		}
 	};
+
+	const board = useSelector((state) => state.boards).find((board) => board.isActive);
+
+	const [isFirstLoad, setIsFirstLoad] = useState(true);
+
+	if (type === "edit" && isFirstLoad) {
+		console.log(board);
+		setNewColumns(
+			board.columns.map((col) => {
+				return { ...col, id: uuid() };
+			})
+		);
+		setName(board.name);
+		setIsFirstLoad(false);
+	}
 
 	return (
 		<div
@@ -86,7 +101,7 @@ function AddEditBoardModal({ setBoardModalOpen, type }) {
 
 				<div className="mt-8 flex flex-col space-y-3">
 					<label className="text-sm dark:text-white text-gray-500">Board columns</label>
-					{newColumn.map((column, index) => (
+					{newColumns.map((column, index) => (
 						<div key={index} className="flex items-center w-full">
 							<input
 								className="bg-transparent flex-grow px-4 py-2 rounded-md 
@@ -112,7 +127,10 @@ function AddEditBoardModal({ setBoardModalOpen, type }) {
 					<button
 						className="w-full items-center hover:opacity-75 dark:text-[#635fc7] dark:bg-white text-white bg-[#635fc7] mt-8 py-2 rounded-full"
 						onClick={() => {
-							setNewColumn((state) => [...state, { name: "", task: [], id: uuid() }]);
+							setNewColumns((state) => [
+								...state,
+								{ name: "", task: [], id: uuid() },
+							]);
 						}}
 					>
 						+ Add New Column
