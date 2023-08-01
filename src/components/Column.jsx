@@ -31,10 +31,10 @@ function Column({ colIndex }) {
 		<div className="scrollbar-hide mx-5 pt-[90px] min-w-[280px] ">
 			<p className=" font-semibold flex items-center gap-2 tracking-widest md:tracking-[.2em] text-[#828fa3]">
 				<div className={`rounded-full w-4 h-4 ${color} `} />
-				{col.name} ({col.tasks.length})
+				{col.name} ({col?.tasks?.length > 0 ? col?.tasks?.length : "0"})
 			</p>
 
-			{col.tasks.map((task, index) => (
+			{col.tasks?.map((task, index) => (
 				<Task key={index} taskIndex={index} colIndex={colIndex} />
 			))}
 		</div>
