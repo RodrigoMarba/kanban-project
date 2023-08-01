@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import SideBar from "./SideBar";
+import SideBar from "./Sidebar";
 import Column from "./Column";
 
 function Center({ boardModalOpen, setBoardModalOpen }) {

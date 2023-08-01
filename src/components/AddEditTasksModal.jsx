@@ -5,7 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 
 import boardsSlice from "../redux/boardsSlice";
 
-function AddEditTasksModal({ type, device, setOpenAddEditTask, taskIndex, prevColIndex = 0 }) {
+function AddEditTasksModal({
+	type,
+	device,
+	setOpenAddEditTask,
+	setIsTaskModalOpen,
+	taskIndex,
+	prevColIndex = 0,
+}) {
 	const [title, setTitle] = useState("");
 
 	const [description, setDescription] = useState("");
@@ -24,6 +31,8 @@ function AddEditTasksModal({ type, device, setOpenAddEditTask, taskIndex, prevCo
 	const [newColIndex, setNewColIndex] = useState(prevColIndex);
 
 	const [status, setStatus] = useState(columns[prevColIndex].name);
+
+	const [isFirstLoad, setIsFirstLoad] = useState(true);
 
 	const dispatch = useDispatch();
 
@@ -46,6 +55,7 @@ function AddEditTasksModal({ type, device, setOpenAddEditTask, taskIndex, prevCo
 	};
 
 	const onSubmit = (type) => {
+		setIsTaskModalOpen(false);
 		if (type === "add") {
 			dispatch(
 				boardsSlice.actions.addTask({
@@ -86,6 +96,17 @@ function AddEditTasksModal({ type, device, setOpenAddEditTask, taskIndex, prevCo
 		setIsValid(true);
 		return true;
 	};
+
+	if (type === "edit" && isFirstLoad) {
+		setSubtasks(
+			task.subtasks.map((subtask) => {
+				return { ...subtask, id: uuid() };
+			})
+		);
+		setTitle(task.title);
+		setDescription(task.description);
+		setIsFirstLoad(false);
+	}
 
 	return (
 		<div
