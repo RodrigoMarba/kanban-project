@@ -8,7 +8,7 @@ import AddEditBoardModal from "./AddEditBoardModal";
 function Center({ boardModalOpen, setBoardModalOpen }) {
 	const [windowSize, setWindowSize] = useState([window.innerWidth, window.innerHeight]);
 
-	const [isSideBarOpen, setIsSideBarOpen] = useState(false);
+	const [isSideBarOpen, setIsSideBarOpen] = useState(true);
 
 	const boards = useSelector((state) => state.boards);
 	const board = boards.find((board) => board.isActive);
@@ -34,7 +34,9 @@ function Center({ boardModalOpen, setBoardModalOpen }) {
 					: "bg-[#f4f7fd] scrollbar-hide h-screen flex dark:bg-[#20212c] overflow-x-scroll gap-6"
 			}
 		>
-			{windowSize[0] >= 768 && <SideBar />}
+			{windowSize[0] >= 768 && (
+				<SideBar isSideBarOpen={isSideBarOpen} setIsSideBarOpen={setIsSideBarOpen} />
+			)}
 
 			{/* Columns */}
 
