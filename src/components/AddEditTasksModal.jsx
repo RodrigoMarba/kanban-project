@@ -184,7 +184,7 @@ function AddEditTasksModal({
 								{ title: "", isCompleted: false, id: uuid() },
 							]);
 						}}
-						className="w-full items-center hover:opacity-75 dark:bg-white dark:text-[#635fc7] mt-3 relative text-white bg-[#635fc7] py-2 rounded-full"
+						className="w-full items-center hover:opacity-75 dark:bg-white dark:text-[#635fc7] mt-6 relative text-white bg-[#635fc7] py-2 rounded-full"
 					>
 						+ Add new subtask
 					</button>
